@@ -1,0 +1,38 @@
+body {
+    font-family: Tahoma;
+    background-color: #193d63;
+}
+h1 {
+    color: white;
+}
+a {
+    font-size: 1.5em;
+    color: #193d63;
+}
+h2 {
+    color: #193d63;
+}
+.well {
+    margin-top: 40px;
+    padding: 40px 0;
+}
+.disabled {
+    display: none;
+}
+
+.article-item {
+    background: #fff;
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+    padding: 20px;
+}
+
+.content {
+    text-align: left;
+    padding: 10px;
+}
+
+.article-wrapper a:hover {
+    text-decoration: none;
+}
