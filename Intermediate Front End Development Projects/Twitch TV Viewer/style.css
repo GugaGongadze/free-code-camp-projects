@@ -1,0 +1,49 @@
+body {
+    background: #18354a;
+}
+
+header {
+    margin: 0 15%;
+    padding: 40px;
+    font-size: 30px;
+    text-align: center;
+}
+header h1 {
+    color: #fff;
+    font-family: Arial;
+}
+
+main {
+    margin: 0 15%;
+    padding: 40px;
+}
+main .stream {
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    margin-bottom: 10px;
+    background: rgba(10, 10, 10, 0.4);
+}
+main img {
+    width: 50px;
+    border-radius: 50%;
+}
+
+
+.status {
+    flex-basis: 25%;
+}
+
+.viewers {
+    flex-basis: 10%;
+}
+
+.game {
+    flex-basis: 20%;
+}
+
+.channel-name {
+    flex-basis: 20%;
+}
