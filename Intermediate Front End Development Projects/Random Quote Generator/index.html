@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Random Quote Generator With Forismatic API</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="text-center">Random Quote Generator</h1>
+        <div class="quote-container">
+            <h3 id="quote" class="text-center"></h3>
+            <i id="author"></i>
+        </div>
+    </div>
+    <div class="container">
+        <div class="text-center">
+            <button class="btn btn-primary" id="buttony">Get A New Quote</button>
+            <a class="twitter-share-button" href="https://twitter.com/intent/tweet" data-size="large" target="_blank">
+                <button class="btn btn-info">Tweet This Quote!</button>
+            </a>
+        </div>
+    </div>
+
+    <script type="text/javascript" async src="https://api.forismatic.com/api/1.0/?method=getQuote&format=jsonp&jsonp=parseQuote&lang=en"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
