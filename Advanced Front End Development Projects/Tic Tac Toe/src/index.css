@@ -1,37 +1,44 @@
+/* font-size: 10px;
+  background: url(http://i.imgur.com/b9r5sEL.jpg) bottom center;
+background-size: cover;
+
 body {
 	font: 14px 'Century Gothic', Futura, sans-serif;
-	margin: 20px;
 	background: #14bdac;
+} */
+
+html {
+	background: #14bdac;
+	background-size: cover;
+}
+body,
+html {
+	margin: 0;
+	padding: 0;
+	font: 1.5rem 'Century Gothic', Futura, sans-serif;
 }
 
 ol,
 ul {
 	padding-left: 30px;
 }
-
-.board-row:after {
-	clear: both;
-	content: '';
-	display: table;
-}
-
 .status {
-	margin-bottom: 10px;
+	margin-bottom: 20px;
 }
 
 .square {
-	background: #fff;
-	border: 1px solid #999;
+	background: #14bdac;
+	border: 3px solid #0da192;
+	border-radius: 3px;
 	float: left;
-	font-size: 24px;
-	font-weight: bold;
+	font-size: 50px;
 	line-height: 34px;
-	height: 34px;
-	margin-right: -1px;
-	margin-top: -1px;
+	height: 100px;
+	margin-right: -2px;
+	margin-top: -2px;
 	padding: 0;
 	text-align: center;
-	width: 34px;
+	width: 100px;
 }
 
 .square:focus {
@@ -47,8 +54,9 @@ ul {
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+	height: 100vh;
 }
 
 .game-info {
-	margin-left: 20px;
+	margin-bottom: 20px;
 }
