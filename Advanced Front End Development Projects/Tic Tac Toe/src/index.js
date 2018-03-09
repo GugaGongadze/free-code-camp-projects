@@ -53,7 +53,8 @@ class Game extends React.Component {
 				}
 			],
 			stepNumber: 0,
-			xIsNext: true
+			xIsNext: true,
+			comTurn: false
 		};
 	}
 
@@ -64,7 +65,11 @@ class Game extends React.Component {
 		if (calculateWinner(squares) || squares[i]) {
 			return;
 		}
-		squares[i] = this.state.xIsNext ? 'X' : 'O';
+		squares[i] = 'X';
+
+		let nextMove = this.comMove(squares, this.state.stepNumber, i);
+		squares[nextMove] = 'O';
+
 		this.setState({
 			history: history.concat([
 				{
@@ -72,8 +77,40 @@ class Game extends React.Component {
 				}
 			]),
 			stepNumber: history.length,
-			xIsNext: !this.state.xIsNext
+			xIsNext: true
 		});
+	}
+
+	comMove(squares, stepNumber, index) {
+		if (stepNumber === 0) {
+			if (index === 4) {
+				const random = Math.round(Math.random() * 8 / 2) * 2;
+				return random === 4
+					? Math.round(Math.random() * 8 / 2) * 2
+					: random;
+			} else {
+				return 4;
+			}
+		} else if (stepNumber === 1) {
+			if (squares[8 - index] !== null) {
+				if (index === 0 || index === 8) {
+					return Math.round(Math.random()) * 4 + 2;
+				} else {
+					return Math.round(Math.random() * 8 / 8) * 8;
+				}
+			} else {
+				return 8 - index;
+			}
+		} else if (stepNumber === 2) {
+			const oppositeIndices = squares.map((square, i) => {
+				if (square === 'O') {
+					console.log(i);
+					return i;
+				}
+				// return square[index] === 'O';
+			});
+			console.log(oppositeIndices);
+		}
 	}
 
 	jumpTo(step) {
@@ -102,14 +139,14 @@ class Game extends React.Component {
 		const current = history[this.state.stepNumber];
 		const winner = calculateWinner(current.squares);
 
-		const moves = history.map((step, move) => {
-			const desc = move ? `Go to move #${move}` : `Go to game start`;
-			return (
-				<li key={move}>
-					<button onClick={() => this.jumpTo(move)}>{desc}</button>
-				</li>
-			);
-		});
+		// const moves = history.map((step, move) => {
+		// 	const desc = move ? `Go to move #${move}` : `Go to game start`;
+		// 	return (
+		// 		<li key={move}>
+		// 			<button onClick={() => this.jumpTo(move)}>{desc}</button>
+		// 		</li>
+		// 	);
+		// });
 
 		let status;
 		if (winner) {
