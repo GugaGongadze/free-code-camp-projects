@@ -102,16 +102,31 @@ class Game extends React.Component {
 				return 8 - index;
 			}
 		} else if (stepNumber === 2) {
-			const oppositeIndices = squares.map((square, i) => {
+			const oppositeIndices = [];
+			squares.forEach((square, i) => {
 				if (square === 'O') {
-					console.log(i);
-					return i;
+					oppositeIndices.push(i);
 				}
-				// return square[index] === 'O';
 			});
-			console.log(oppositeIndices);
+
+			if (squares[oppositeIndices[0] + 1] === 'X' || squares[oppositeIndices[0] + 3] === 'X') {
+				return 8 - index;
+			} else {
+				if (oppositeIndices[1] - oppositeIndices[0] === 2) {
+					return oppositeIndices[0] + 1;
+				} else {
+					return oppositeIndices[0] + 3;
+				}
+			}
+		} else if (stepNumber === 3) {
+			console.log('3');
+			return 8 - index;
+		} else if (stepNumber === 4) {
+			console.log('4');
 		}
 	}
+
+	checkIfCanEnd() {}
 
 	jumpTo(step) {
 		this.setState({
@@ -152,7 +167,7 @@ class Game extends React.Component {
 		if (winner) {
 			status = `Winner ${winner}`;
 			this.resetGame();
-		} else if (this.state.stepNumber === 9) {
+		} else if (this.state.stepNumber === 5) {
 			status = 'Draw';
 			this.resetGame();
 		} else {
