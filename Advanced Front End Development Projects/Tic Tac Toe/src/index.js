@@ -53,8 +53,8 @@ class Game extends React.Component {
 				}
 			],
 			stepNumber: 0,
-			xIsNext: true,
-			comTurn: false
+			comIsNext: false,
+			playerIsX: null
 		};
 	}
 
@@ -65,131 +65,42 @@ class Game extends React.Component {
 		if (calculateWinner(squares) || squares[i]) {
 			return;
 		}
-		squares[i] = 'X';
 
-		let nextMove = this.comMove(squares, this.state.stepNumber, i);
-		squares[nextMove] = 'O';
-
+		squares[i] = this.state.playerIsX ? 'X' : 'O';
 		this.setState({
-			history: history.concat([
-				{
-					squares: squares
-				}
-			]),
+			history: history.concat([{ squares }]),
 			stepNumber: history.length,
-			xIsNext: true
+			comIsNext: true
 		});
+
+		setTimeout(() => {
+			if (squares.includes(null)) {
+				let nextMove = this.comMove(squares, this.state.stepNumber, i);
+
+				squares[nextMove] = this.state.playerIsX ? 'O' : 'X';
+			}
+			this.setState({
+				history: history.concat([{ squares: squares }]),
+				comIsNext: false
+			});
+		}, 1000);
 	}
 
 	comMove(squares, stepNumber, index) {
-		if (stepNumber === 0) {
-			return index === 4 ? 2 : 4;
-		}
-
-		if (stepNumber === 1) {
-			if (squares[8 - index] !== null) {
-				if (index === 0 || index === 8) {
-					return Math.round(Math.random()) * 4 + 2;
-				} else {
-					return Math.round(Math.random() * 8 / 8) * 8;
-				}
-			} else {
-				return 8 - index;
+		const filledSquares = [];
+		squares.forEach((square, i) => {
+			if (square !== null) {
+				filledSquares.push(i);
 			}
-		}
+		});
 
-
-		if (stepNumber === 2) {
-			const opponentIndices = [];
-
-			squares.forEach((square, i) => {
-				if (square === 'O') {
-					opponentIndices.push(i);
-				}
-			});
-
-			if (opponentIndices[1] - opponentIndices[0] === 1) {
-				if (opponentIndices[0] === 0 || opponentIndices[0] === 6) {
-					if (squares[opponentIndices[1] + 1] === 'X') {
-						if (opponentIndices[0] === 0) {
-							return 6;
-						} else {
-							return 0;
-						}
-					} else {
-						return opponentIndices[1] + 1;
-					}
-				} else if (opponentIndices[0] === 2) {
-					if (squares[8 - index] === 'O') {
-						return 7;
-					} else {
-						return 8 - index;
-					}
-				} else {
-					if (squares[opponentIndices[0] - 1] === 'X') {
-						return 8 - index;
-					} else {
-						return opponentIndices[0] - 1;
-					}
-				}
-			} else if (opponentIndices[1] - opponentIndices[0] === 3) {
-				if (opponentIndices[0] === 0 || opponentIndices[0] === 2) {
-					if (squares[opponentIndices[1] + 3] === 'X') {
-						if (opponentIndices[0] === 0) {
-							return 2;
-						} else {
-							return 0;
-						}
-					} else {
-						return opponentIndices[1] + 3;
-					}
-				} else {
-					if (squares[opponentIndices[0] - 3] === 'X') {
-						return 8 - index;
-					} else {
-						return opponentIndices[0] - 3;
-					}
-				}
-			}
-
-			if (squares[opponentIndices[0] + 1] === 'X' || squares[opponentIndices[0] + 3] === 'X') {
-				return 8 - index;
-			} else {
-				if (opponentIndices[1] - opponentIndices[0] === 2) {
-					return opponentIndices[0] + 1;
-				} else if (squares[8 - index] !== null) {
-					return opponentIndices[0] + 3;
-				} else {
-					return 8 - index;
-				}
-			}
-		}
-		if (stepNumber === 3) {
-			if (squares[8 - index] !== null) {
-				if (index === 6 && squares[5] === null) {
-					return 5;
-				} else if (index === 6 && squares[1] === null) {
-					return 1;
-				} else if (index === 6 && squares[0] === null && squares[index + 1] === 'X') {
-					return 0;
-				} else if (index === 6 && squares[8] === null) {
-					return 8;
-				}
-			} else {
-				return 8 - index;
-			}
-		}
-		if (stepNumber === 4) {
-			console.log('4');
-		}
+		return generateRandNumExcluding(8, filledSquares);
 	}
-
-	checkIfCanEnd() {}
 
 	jumpTo(step) {
 		this.setState({
 			stepNumber: step,
-			xIsNext: step % 2 === 0
+			comIsNext: step % 2 === 0
 		});
 	}
 
@@ -202,50 +113,110 @@ class Game extends React.Component {
 					}
 				],
 				stepNumber: 0,
-				xIsNext: true
+				comIsNext: false,
+				playerIsX: null
 			});
 		}, 2000);
+	}
+
+	onButtonClick(e) {
+		if (e.target.textContent === 'X') {
+			this.setState({
+				playerIsX: true
+			});
+		} else {
+			this.setState({
+				playerIsX: false,
+				comIsNext: true
+			});
+			const history = this.state.history.slice(
+				0,
+				this.state.stepNumber + 1
+			);
+
+			const current = history[history.length - 1];
+			const squares = current.squares.slice();
+
+			squares[4] = 'X';
+
+			setTimeout(() => {
+				this.setState({
+					history: history.concat([{ squares }]),
+					stepNumber: history.length,
+					comIsNext: false
+				});
+			}, 1000);
+		}
 	}
 
 	render() {
 		const history = this.state.history;
 		const current = history[this.state.stepNumber];
 		const winner = calculateWinner(current.squares);
+		const playerIsX = this.state.playerIsX;
 
-		// const moves = history.map((step, move) => {
-		// 	const desc = move ? `Go to move #${move}` : `Go to game start`;
-		// 	return (
-		// 		<li key={move}>
-		// 			<button onClick={() => this.jumpTo(move)}>{desc}</button>
-		// 		</li>
-		// 	);
-		// });
-
+		console.log(playerIsX);
 		let status;
 		if (winner) {
-			status = `Winner ${winner}`;
+			// status = `Winner ${winner}`;
+			if (playerIsX && winner === 'X') {
+				status = 'Winner: Player';
+			} else if (playerIsX && winner !== 'O') {
+				status = 'Winner: Computer';
+			} else if (!playerIsX && winner === 'X') {
+				status = 'Winner: Computer';
+			} else {
+				status = 'Winner: Player';
+			}
 			this.resetGame();
 		} else if (this.state.stepNumber === 5) {
 			status = 'Draw';
 			this.resetGame();
 		} else {
-			status = `Next player: ${this.state.xIsNext ? 'X' : 'O'}`;
+			status = `Next: ${this.state.comIsNext ? 'Computer' : 'Player'}`;
 		}
 
-		return (
-			<div className="game">
-				<div className="game-info">
-					<div>{status}</div>
-					{/* <ol>{moves}</ol> */}
+		if (playerIsX === null) {
+			return (
+				<div className="game">
+					<div className="game-info">
+						<div className="greeting-screen">
+							<div>Do you want to play as</div>
+							<div className="button-wrapper">
+								<button
+									className="greeting-button"
+									onClick={this.onButtonClick.bind(this)}
+								>
+									X
+								</button>
+								<span>or</span>
+								<button
+									className="greeting-button"
+									onClick={this.onButtonClick.bind(this)}
+								>
+									O
+								</button>
+							</div>
+							<div>?</div>
+						</div>
+					</div>
 				</div>
-				<div className="game-board">
-					<Board
-						squares={current.squares}
-						onClick={i => this.handleClick(i)}
-					/>
+			);
+		} else {
+			return (
+				<div className="game">
+					<div className="game-info">
+						<div>{status}</div>
+					</div>
+					<div className="game-board">
+						<Board
+							squares={current.squares}
+							onClick={i => this.handleClick(i)}
+						/>
+					</div>
 				</div>
-			</div>
-		);
+			);
+		}
 	}
 }
 
@@ -272,6 +243,13 @@ function calculateWinner(squares) {
 		}
 	}
 	return null;
+}
+
+function generateRandNumExcluding(limit, excludedNums) {
+	const num = Math.floor(Math.random() * limit + 1);
+	return excludedNums.includes(num)
+		? generateRandNumExcluding(limit, excludedNums)
+		: num;
 }
 
 // ========================================
