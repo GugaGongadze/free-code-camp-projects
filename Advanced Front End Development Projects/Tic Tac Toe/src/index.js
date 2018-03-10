@@ -83,15 +83,10 @@ class Game extends React.Component {
 
 	comMove(squares, stepNumber, index) {
 		if (stepNumber === 0) {
-			if (index === 4) {
-				const random = Math.round(Math.random() * 8 / 2) * 2;
-				return random === 4
-					? Math.round(Math.random() * 8 / 2) * 2
-					: random;
-			} else {
-				return 4;
-			}
-		} else if (stepNumber === 1) {
+			return index === 4 ? 2 : 4;
+		}
+
+		if (stepNumber === 1) {
 			if (squares[8 - index] !== null) {
 				if (index === 0 || index === 8) {
 					return Math.round(Math.random()) * 4 + 2;
@@ -101,27 +96,90 @@ class Game extends React.Component {
 			} else {
 				return 8 - index;
 			}
-		} else if (stepNumber === 2) {
-			const oppositeIndices = [];
+		}
+
+
+		if (stepNumber === 2) {
+			const opponentIndices = [];
+
 			squares.forEach((square, i) => {
 				if (square === 'O') {
-					oppositeIndices.push(i);
+					opponentIndices.push(i);
 				}
 			});
 
-			if (squares[oppositeIndices[0] + 1] === 'X' || squares[oppositeIndices[0] + 3] === 'X') {
-				return 8 - index;
-			} else {
-				if (oppositeIndices[1] - oppositeIndices[0] === 2) {
-					return oppositeIndices[0] + 1;
+			if (opponentIndices[1] - opponentIndices[0] === 1) {
+				if (opponentIndices[0] === 0 || opponentIndices[0] === 6) {
+					if (squares[opponentIndices[1] + 1] === 'X') {
+						if (opponentIndices[0] === 0) {
+							return 6;
+						} else {
+							return 0;
+						}
+					} else {
+						return opponentIndices[1] + 1;
+					}
+				} else if (opponentIndices[0] === 2) {
+					if (squares[8 - index] === 'O') {
+						return 7;
+					} else {
+						return 8 - index;
+					}
 				} else {
-					return oppositeIndices[0] + 3;
+					if (squares[opponentIndices[0] - 1] === 'X') {
+						return 8 - index;
+					} else {
+						return opponentIndices[0] - 1;
+					}
+				}
+			} else if (opponentIndices[1] - opponentIndices[0] === 3) {
+				if (opponentIndices[0] === 0 || opponentIndices[0] === 2) {
+					if (squares[opponentIndices[1] + 3] === 'X') {
+						if (opponentIndices[0] === 0) {
+							return 2;
+						} else {
+							return 0;
+						}
+					} else {
+						return opponentIndices[1] + 3;
+					}
+				} else {
+					if (squares[opponentIndices[0] - 3] === 'X') {
+						return 8 - index;
+					} else {
+						return opponentIndices[0] - 3;
+					}
 				}
 			}
-		} else if (stepNumber === 3) {
-			console.log('3');
-			return 8 - index;
-		} else if (stepNumber === 4) {
+
+			if (squares[opponentIndices[0] + 1] === 'X' || squares[opponentIndices[0] + 3] === 'X') {
+				return 8 - index;
+			} else {
+				if (opponentIndices[1] - opponentIndices[0] === 2) {
+					return opponentIndices[0] + 1;
+				} else if (squares[8 - index] !== null) {
+					return opponentIndices[0] + 3;
+				} else {
+					return 8 - index;
+				}
+			}
+		}
+		if (stepNumber === 3) {
+			if (squares[8 - index] !== null) {
+				if (index === 6 && squares[5] === null) {
+					return 5;
+				} else if (index === 6 && squares[1] === null) {
+					return 1;
+				} else if (index === 6 && squares[0] === null && squares[index + 1] === 'X') {
+					return 0;
+				} else if (index === 6 && squares[8] === null) {
+					return 8;
+				}
+			} else {
+				return 8 - index;
+			}
+		}
+		if (stepNumber === 4) {
 			console.log('4');
 		}
 	}
